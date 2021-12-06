@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2020",
+        "jsx": "preserve",
+        "strictFunctionTypes": true,
+        "baseUrl": ".",
+        "paths": {
+            "@images/*": [
+                "resources/images/*"
+            ],
+            "@icons/*": [
+                "resources/icons/*"
+            ],
+            "@components/*": [
+                "components/*"
+            ],
+        },
+        "exclude": [
+            "node_modules",
+            "**/node_modules/*"
+        ]
+    }
+}
