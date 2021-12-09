@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-export default function Twitter() {
+export default function TwitterIcon() {
     return (
         <Fragment>
             <svg xmlns="http://www.w3.org/2000/svg">

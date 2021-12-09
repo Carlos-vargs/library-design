@@ -1,12 +1,12 @@
 import { nanoid } from 'nanoid';
 import XIcon from '@icons/XIcon';
-import Github from '@icons/Github';
+import Github from '@icons/GithubIcon';
 import NavMobile from './NavMobile';
-import Twitter from '@icons/Twitter';
+import Twitter from '@icons/TwitterIcon';
 import MenuIcon from '@icons/MenuIcon';
-import Facebook from '@icons/Facebook';
+import Facebook from '@icons/FacebookIcon';
 import { Image } from '@chakra-ui/image';
-import Instagram from '@icons/Instagram';
+import Instagram from '@icons/InstagramIcon';
 import { Fragment, useState } from 'react';
 import logo from '@images/logo-white2.png';
 import { Box, Center, Stack } from '@chakra-ui/layout';
@@ -46,7 +46,8 @@ function NavHeaderMobile({ data }) {
             id: nanoid(),
             socialNetwork: 'Facebook',
             iconSvg: <Facebook />,
-            pl: '6px'
+            pl: '6px',
+            url: 'https://www.facebook.com/nccarlosvargas/',
         },
         {
             id: nanoid(),

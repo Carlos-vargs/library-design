@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-export default function Github() {
+export default function GithubIcon() {
     return (
         <Fragment>
             <svg

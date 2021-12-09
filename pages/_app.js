@@ -1,6 +1,7 @@
 import 'animate.css'
 import Head from 'next/head'
 import '../styles/globals.css'
+
 import theme from '@components/theme'
 import { ChakraProvider } from "@chakra-ui/react"
 

@@ -37,6 +37,7 @@ function Header() {
             w="full"
             h="100px"
             position="fixed"
+            zIndex="44"
         >
             <Center
                 h="full"
