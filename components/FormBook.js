@@ -204,21 +204,31 @@ function FormBook({ onChange, values, setPrevious }) {
                 direction="column"
             >
                 <Text as="span" textTransform="capitalize" >Book</Text>
-                <Input
-                    placeholder='Title'
-                    size='md'
-                    required
-                    name={"title"}
-                    value={values.title}
-                    onChange={onChange}
-                />
                 <Flex gridGap="20px" direction={['column', 'row', 'row', 'row', 'row']} >
+                    <Input
+                        placeholder='Title'
+                        size='md'
+                        required
+                        name={"title"}
+                        value={values.title}
+                        onChange={onChange}
+                    />
                     <Input
                         placeholder='category'
                         size='md'
                         required
                         name={"category"}
                         value={values.category}
+                        onChange={onChange}
+                    />
+                </Flex>
+                <Flex gridGap="20px" direction={['column', 'row', 'row', 'row', 'row']} >
+                    <Input
+                        placeholder='url'
+                        size='md'
+                        required
+                        name={"url"}
+                        value={values.url}
                         onChange={onChange}
                     />
                     <Input
@@ -240,6 +250,7 @@ function FormBook({ onChange, values, setPrevious }) {
                         name={"language"}
                         value={values.language}
                         onChange={onChange}
+                        textTransform="capitalize"
                     >
 
                         {

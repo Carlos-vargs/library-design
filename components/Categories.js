@@ -24,11 +24,26 @@ function Categories({ data, setFilter }) {
                     px={['30px', '30px', '40px', '60px', '70px']}
                     cursor="pointer"
                 >
+                    <Flex
+                        textTransform="capitalize"
+                        bg={randomColor}
+                        borderRadius="3xl"
+                        textAlign="center"
+                        alignItems="center"
+                        justifyContent="center"
+                        h="52px"
+                        w={['120px', '140px', '160px', '160px', '160px']}
+                        userSelect="none"
+                        color="hsl(0deg 0% 34%)"
+                        onClick={() => setFilter("")}
+                    >
+                        all
+                    </Flex>
                     {
                         data.map(e => <Flex
                             key={nanoid()}
                             textTransform="capitalize"
-                            bg={randomColor()}
+                            bg={randomColor}
                             borderRadius="3xl"
                             textAlign="center"
                             alignItems="center"

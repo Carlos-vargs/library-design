@@ -4,8 +4,6 @@ import { Fragment } from 'react';
 
 function BookCard({ data }) {
 
-    const image = "https://i.pinimg.com/originals/2d/bb/11/2dbb11b8cedfbb4a639f1b384ee062d2.jpg"
-
     return (
         <Fragment>
             <Flex
@@ -25,14 +23,24 @@ function BookCard({ data }) {
                 w={['280px', '280px', '270px', '270px', '280px']}
             >
                 <Image
-                    src={image}
+                    src={data.image}
                     w="full"
                     h="340px"
                     backgroundSize="contain"
                 />
                 <Flex direction="column" alignItems="center">
                     <Text as="span" fontSize="12px" textTransform="uppercase" fontWeight="700" mb="8px" >{`${data.authors.first_name} ${data.authors.last_name}`}</Text>
-                    <Heading fontWeight="700" fontSize="20px" textTransform="capitalize" px="24px" >{data.title}</Heading>
+                    <Heading
+                        className="line-clamp"
+                        fontWeight="700"
+                        fontSize="20px"
+                        textTransform="capitalize"
+                        px="24px"
+                        title={data.title}
+                        textOverflow="ellipsis"
+                    >
+                        {data.title}
+                    </Heading>
                 </Flex>
             </Flex>
         </Fragment>

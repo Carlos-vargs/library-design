@@ -10,30 +10,21 @@ import { nanoid } from 'nanoid';
 
 export default function Home() {
 
-    const authrosUrl = "http://localhost:8000/api/authors"
     const BooksUrl = "http://localhost:8000/api/books"
 
     const [data, setData] = useState({
         loading: true,
         error: null,
         books: [],
-        formBook: {
-            title: "",
-            category: "",
-            group: "",
-            author_id: "",
-            language: "",
-            year: "",
-            description: "",
-        },
         search: "",
+        newBook: {},
     });
 
     const [filterByCategory, setFilter] = useState("")
 
     useEffect(() => {
         fetchBooks()
-    }, [])
+    }, [data.newBook])
 
     const handleChange = e => {
         const { name, value } = e.target
@@ -47,17 +38,15 @@ export default function Home() {
             const response = await axios.get(BooksUrl)
 
             setData({
-                loading: false,
-                error: null,
+                ...data, loading: false,
                 books: response.data.data,
-                search: "",
             })
 
         } catch (error) {
             setData({
+                ...data,
                 loading: false,
                 error: error,
-                search: "",
             })
         }
 
@@ -79,21 +68,6 @@ export default function Home() {
         )
     };
 
-    // const categories = [
-    //     "sciFi",
-    //     "thriller",
-    //     "biographies",
-    //     "mystery",
-    //     "romance",
-    //     "comedy",
-    //     "classics",
-    //     "shorts",
-    //     "kids",
-    //     "adventure",
-    //     "comics",
-    //     "fantasy",
-    // ]
-
     const dataCategory = []
 
     data.books.forEach(e => {
@@ -104,7 +78,34 @@ export default function Home() {
         return dataCategory.indexOf(item) === index;
     })
 
-    const filteredData = data.books.filter(e => filterByCategory !== "" ? e.category === filterByCategory : e);
+    let filterA = data.books.filter(e => filterByCategory !== "" ? e.category === filterByCategory : e);
+
+    let filteredData = filterA
+
+    let inputSearch = data.books.filter(e => {
+
+        let fullName = `${e.authors.first_name} ${e.authors.last_name}`
+        let group = e.group
+        let title = e.title
+        let text = data.search.toLowerCase()
+
+        if (group !== null) {
+            if (group.toLowerCase().indexOf(text) !== -1) {
+                return e
+            }
+        }
+
+        if (fullName.toLowerCase().indexOf(text) !== -1) {
+            return e
+        }
+
+        if (title.toLowerCase().indexOf(text) !== -1) {
+            return e
+        }
+
+    });
+
+    if (filterByCategory === "") filteredData = inputSearch;
 
     return (
         <Fragment>
@@ -117,11 +118,12 @@ export default function Home() {
                     maxW="1520px"
                     direction="column"
                     alignItems="center"
-                // bgColor="#F7F6F9"
                 >
                     <SearchBar
                         onChange={handleChange}
                         search={data.search}
+                        setData={setData}
+                        data={data}
                     />
                     <Categories
                         data={categories}
@@ -139,7 +141,7 @@ export default function Home() {
                             data.books.length === 0 && "There are no books, do you want to create one?"
                         }
                         {
-                            
+
                             filteredData.map(e => <BookCard key={nanoid()} data={e} />)
                         }
                     </Center>

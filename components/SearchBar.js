@@ -9,8 +9,8 @@ import logo from '@images/logo1.png';
 import FormBook from '@components/FormBook';
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/modal';
 
-function SearchBar({ search, onChange, }) {
-
+function SearchBar({ search, onChange, setData, data }) {
+    
     const BooksUrl = "http://localhost:8000/api/book"
 
     const [isOpen, setOpen] = useState(false)
@@ -25,6 +25,7 @@ function SearchBar({ search, onChange, }) {
             last_name: "",
             nationality: "",
             title: "",
+            url:"",
             category: "",
             group: "",
             author_id: 0,
@@ -53,16 +54,16 @@ function SearchBar({ search, onChange, }) {
 
             const response = await axios.post(BooksUrl, state.form)
 
-            console.log(response.data)
+            if (response.status === 201) setOpen(false);
 
-            if (response.status) setOpen(false);
+            setData({...data, newBook:response.data})
 
             setState({ ...state })
 
 
         } catch (error) {
 
-            console.error(error.response.status)
+            console.error(error.response)
             console.error(error.response.data.errors)
 
             setState({ ...state, error: error.response.data.errors, })
@@ -70,11 +71,8 @@ function SearchBar({ search, onChange, }) {
         }
     }
 
-    function handleClick() {
-        isOpen
-            ? setOpen(false)
-            : setOpen(true)
-    }
+    const handleClick = () => isOpen ? setOpen(false) : setOpen(true);
+
 
     const dataForms = [
         {
@@ -121,8 +119,6 @@ function SearchBar({ search, onChange, }) {
                         size='lg'
                         borderRadius="xl"
                         placeholder='Search'
-                        // shadow="xl"
-                        // borderColor="transparent"
                         name="search"
                         value={search}
                         onChange={onChange}
