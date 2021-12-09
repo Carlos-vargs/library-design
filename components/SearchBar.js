@@ -10,7 +10,7 @@ import FormBook from '@components/FormBook';
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/modal';
 
 function SearchBar({ search, onChange, setData, data }) {
-    
+
     const BooksUrl = "http://localhost:8000/api/book"
 
     const [isOpen, setOpen] = useState(false)
@@ -25,7 +25,7 @@ function SearchBar({ search, onChange, setData, data }) {
             last_name: "",
             nationality: "",
             title: "",
-            url:"",
+            cover_url: "",
             category: "",
             group: "",
             author_id: 0,
@@ -54,9 +54,26 @@ function SearchBar({ search, onChange, setData, data }) {
 
             const response = await axios.post(BooksUrl, state.form)
 
-            if (response.status === 201) setOpen(false);
+            if (response.status === 201) {
+                setOpen(false)
+                setState({
+                    ...data, form: {
+                        first_name: "",
+                        last_name: "",
+                        nationality: "",
+                        title: "",
+                        cover_url: "",
+                        category: "",
+                        group: "",
+                        author_id: 0,
+                        language: "",
+                        year: "",
+                        description: "",
+                    }
+                })
+            };
 
-            setData({...data, newBook:response.data})
+            setData({ ...data, newBook: response.data })
 
             setState({ ...state })
 

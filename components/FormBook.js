@@ -227,8 +227,8 @@ function FormBook({ onChange, values, setPrevious }) {
                         placeholder='url'
                         size='md'
                         required
-                        name={"url"}
-                        value={values.url}
+                        name={"cover_url"}
+                        value={values.cover_url}
                         onChange={onChange}
                     />
                     <Input
