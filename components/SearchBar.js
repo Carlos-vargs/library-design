@@ -1,48 +1,93 @@
 import axios from 'axios';
+import logo from '@images/logo1.png';
 import PlusIcon from '@icons/PlusIcon';
 import { Input } from '@chakra-ui/input';
-import { Fragment, useState } from 'react';
+import { Image } from '@chakra-ui/image';
+import { Fragment, useState, useEffect } from 'react';
+import FormBook from '@components/FormBook';
+import FormBook2 from '@components/FormBook2';
 import FormAuthor from '@components/FormAuthor';
 import { Box, Center, Flex, Heading } from '@chakra-ui/layout';
-import { Image } from '@chakra-ui/image';
-import logo from '@images/logo1.png';
-import FormBook from '@components/FormBook';
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/modal';
 
-function SearchBar({ search, onChange, setData, data }) {
+function SearchBar({ search, onChange, setData, data, onKeyDown }) {
 
-    const BooksUrl = "http://localhost:8000/api/book"
+    const BooksUrl = "http://localhost:8000/api/books"
+    const AutohrsUrl = "http://localhost:8000/api/authors"
 
     const [isOpen, setOpen] = useState(false)
-    const [next, setNext] = useState(0);
+    const [next, setNext] = useState(1);
 
 
     const [state, setState] = useState({
         loading: false,
         error: null,
+        newAuthor: {},
+        authors: [],
         form: {
-            first_name: "",
-            last_name: "",
-            nationality: "",
             title: "",
             cover_url: "",
             category: "",
             group: "",
-            author_id: 0,
+            author_id: "",
             language: "",
             year: "",
             description: "",
         },
+        formAuthor: {
+            first_name: "",
+            last_name: "",
+            nationality: "",
+        }
     });
 
     const handleChange = e => {
         setState({
+            ...state,
             form: {
                 ...state.form,
                 [e.target.name]: e.target.value
             }
         })
     }
+
+    const handleChangeAuthorForm = e => {
+        setState({
+            ...state,
+            formAuthor: {
+                ...state.formAuthor,
+                [e.target.name]: e.target.value
+            }
+        })
+    }
+
+    const handleClick = () => {
+
+        if (isOpen) {
+            setOpen(false)
+            setState({
+                ...state, form: {
+                    title: "",
+                    cover_url: "",
+                    category: "",
+                    group: "",
+                    author_id: "",
+                    language: "",
+                    year: "",
+                    description: "",
+                },
+                formAuthor: {
+                    first_name: "",
+                    last_name: "",
+                    nationality: "",
+                }
+            })
+        } else {
+            setOpen(true)
+            setNext(1)
+        }
+
+    };
 
     const handleSubmit = async e => {
 
@@ -57,15 +102,12 @@ function SearchBar({ search, onChange, setData, data }) {
             if (response.status === 201) {
                 setOpen(false)
                 setState({
-                    ...data, form: {
-                        first_name: "",
-                        last_name: "",
-                        nationality: "",
+                    ...state, form: {
                         title: "",
                         cover_url: "",
                         category: "",
                         group: "",
-                        author_id: 0,
+                        author_id: "",
                         language: "",
                         year: "",
                         description: "",
@@ -74,8 +116,6 @@ function SearchBar({ search, onChange, setData, data }) {
             };
 
             setData({ ...data, newBook: response.data })
-
-            setState({ ...state })
 
 
         } catch (error) {
@@ -88,17 +128,76 @@ function SearchBar({ search, onChange, setData, data }) {
         }
     }
 
-    const handleClick = () => isOpen ? setOpen(false) : setOpen(true);
+    const handleSubmitFormAuthor = async e => {
 
+        setState({ ...state, loading: true, })
+
+        e.preventDefault()
+
+
+        try {
+
+            const response = await axios.post(AutohrsUrl, state.formAuthor)
+
+            if (response.status === 201) {
+
+                setState({
+                    ...state, formAuthor: {
+                        first_name: "",
+                        last_name: "",
+                        nationality: "",
+                    }, newAuthor: response.data.data
+                })
+                setNext(2)
+            };
+
+
+        } catch (error) {
+
+            console.error(error.response)
+            console.error(error.response.data.errors)
+
+            setState({ ...state, error: error.response.data.errors, })
+
+        }
+    }
+
+    async function fetchAuthors() {
+
+        setState({ ...state })
+
+        try {
+
+            const response = await axios.get(AutohrsUrl)
+
+            setState({
+                ...state,
+                authors: response.data.data,
+            })
+
+        } catch (error) {
+            setState({
+                ...state,
+                error: error,
+            })
+        }
+    }
+
+    useEffect(() => {
+        fetchAuthors()
+    }, [state.newAuthor]);
 
     const dataForms = [
         {
             title: "author",
             form: [
                 <FormAuthor
-                    onChange={handleChange}
-                    values={state.form}
+                    onChange={handleChangeAuthorForm}
+                    values={state.formAuthor}
+                    onSubmit={handleSubmitFormAuthor}
                     setNext={setNext}
+                    setState={setState}
+                    state={state}
                     key="formAuthor"
                 />
             ]
@@ -109,14 +208,29 @@ function SearchBar({ search, onChange, setData, data }) {
                 < FormBook
                     onChange={handleChange}
                     values={state.form}
-                    setPrevious={setNext}
+                    setNext={setNext}
                     onClick={handleClick}
                     key="formBook"
-                />
+                />,
+            ]
+        },
+        {
+            title: "book",
+            form: [
+                < FormBook2
+                    onChange={handleChange}
+                    values={state.form}
+                    setPrevious={setNext}
+                    onClick={handleClick}
+                    authors={state.authors}
+                    key="formBook2"
+                />,
             ]
         },
 
     ]
+
+    console.log(state.newAuthor)
 
     return (
         <Fragment>
@@ -139,6 +253,7 @@ function SearchBar({ search, onChange, setData, data }) {
                         name="search"
                         value={search}
                         onChange={onChange}
+                        onKeyDown={onKeyDown}
                     />
                 </Center>
                 <Box
@@ -168,11 +283,24 @@ function SearchBar({ search, onChange, setData, data }) {
                         </ModalHeader>
                         <ModalCloseButton _focus={{ boxShadow: "none" }} />
                         <ModalBody textAlign="left" >
-                            <Flex as="form" onSubmit={handleSubmit} >
-                                {
-                                    dataForms[next].form
-                                }
-                            </Flex>
+                            {
+                                next === 0
+                                    ? <Flex
+                                        as="form" onSubmit={handleSubmitFormAuthor}
+                                    >
+                                        {
+                                            dataForms[next].form
+                                        }
+                                    </Flex>
+                                    : <Flex
+                                        as="form" onSubmit={handleSubmit}
+                                    >
+                                        {
+                                            dataForms[next].form
+                                        }
+                                    </Flex>
+                            }
+
                         </ModalBody>
                         <ModalFooter>
                         </ModalFooter>

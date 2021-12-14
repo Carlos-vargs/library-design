@@ -5,7 +5,7 @@ import { Select } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
 import React from 'react';
 
-function FormAuthor({ onChange, values, setNext }) {
+function FormAuthor({ onChange, values, setNext, setState, state }) {
 
     const countries = [
         { value: "ABW", country: "Aruba" },
@@ -300,17 +300,39 @@ function FormAuthor({ onChange, values, setNext }) {
                     countries.map(e => <option key={nanoid()} value={e.value} >{e.country}</option>)
                 }
             </Select>
-            <Button
-                mt="94px"
-                maxW="100px"
-                w="full"
-                colorScheme='blue'
-                textTransform="capitalize"
+            <Flex
+                mt="25px"
                 ml="auto"
-                onClick={() => setNext(1)}
+                gridGap="12px"
             >
-                next
-            </Button>
+                <Button
+                    maxW="100px"
+                    w="full"
+                    colorScheme='red'
+                    textTransform="capitalize"
+                    onClick={() => {
+                        setNext(2)
+                        setState({
+                            ...state, formAuthor: {
+                                first_name: "",
+                                last_name: "",
+                                nationality: "",
+                            }
+                        })
+                    }}
+                >
+                    cancel
+                </Button>
+                <Button
+                    maxW="100px"
+                    w="full"
+                    colorScheme='blue'
+                    textTransform="capitalize"
+                    type="submit"
+                >
+                    create
+                </Button>
+            </Flex>
         </Flex>
     );
 }

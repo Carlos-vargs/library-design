@@ -1,8 +1,8 @@
 import { Center, Flex } from '@chakra-ui/layout';
 import { nanoid } from 'nanoid';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 
-function Categories({ data, setFilter }) {
+function Categories({ data, setFilterCategory }) {
 
 
     function randomColor() {
@@ -35,7 +35,7 @@ function Categories({ data, setFilter }) {
                         w={['120px', '140px', '160px', '160px', '160px']}
                         userSelect="none"
                         color="hsl(0deg 0% 34%)"
-                        onClick={() => setFilter("")}
+                        onClick={() =>  setFilterCategory(null) }
                     >
                         all
                     </Flex>
@@ -52,7 +52,7 @@ function Categories({ data, setFilter }) {
                             w={['120px', '140px', '160px', '160px', '160px']}
                             userSelect="none"
                             color="hsl(0deg 0% 34%)"
-                            onClick={() => setFilter(e)}
+                            onClick={() => setFilterCategory(e)}
                         >
                             {e}
                         </Flex>)

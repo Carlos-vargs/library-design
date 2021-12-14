@@ -11,24 +11,96 @@ import { nanoid } from 'nanoid';
 export default function Home() {
 
     const BooksUrl = "http://localhost:8000/api/books"
+    const searchUrl = "http://localhost:8000/api/search"
+    const BooksCategoryUrl = "http://localhost:8000/api/books/category"
+    const categoryUrl = "http://localhost:8000/api/category"
+
+    let filteredData;
 
     const [data, setData] = useState({
         loading: true,
         error: null,
         books: [],
+        categories:[],
         search: "",
         newBook: {},
     });
 
-    const [filterByCategory, setFilter] = useState("")
+    const [filterCategory, setFilterCategory] = useState(null)
+    const [lookingForData, setLookingForData] = useState(false)
+    const [listOfCategories, setCategory] = useState([])
 
     useEffect(() => {
+
         fetchBooks()
-    }, [data.newBook])
+
+         fetchCategories()
+
+        if (filterCategory) {
+            filterByCategory()
+        }
+
+        if (lookingForData) {
+            search()
+        }
+
+    }, [filterCategory, lookingForData, data.newBook])
+
 
     const handleChange = e => {
         const { name, value } = e.target
         setData({ ...data, [name]: value })
+    }
+
+    function handleKeyDown(e) {
+        if (e.keyCode === 13) {
+            setLookingForData(true)
+        }
+    }
+
+    async function filterByCategory() {
+        setData({ ...data })
+
+        try {
+
+            const response = await axios.get(BooksCategoryUrl, { params: { filter: filterCategory } })
+
+            setData({
+                ...data, loading: false,
+                books: response.data.data,
+            })
+
+        } catch (error) {
+            setData({
+                ...data,
+                loading: false,
+                error: error,
+            })
+        }
+
+    }
+
+    async function search() {
+
+        setData({ ...data })
+
+        try {
+
+            const response = await axios.get(searchUrl, { params: { filter: data.search } })
+
+            setData({
+                ...data, loading: false,
+                books: response.data.data,
+            })
+
+        } catch (error) {
+            setData({
+                ...data,
+                loading: false,
+                error: error,
+            })
+        }
+
     }
 
     async function fetchBooks() {
@@ -41,6 +113,23 @@ export default function Home() {
                 ...data, loading: false,
                 books: response.data.data,
             })
+
+        } catch (error) {
+            setData({
+                ...data,
+                loading: false,
+                error: error,
+            })
+        }
+
+    }
+
+    async function fetchCategories() {
+        
+        try {
+            const response = await axios.get(categoryUrl)
+
+            setCategory(response.data.data)
 
         } catch (error) {
             setData({
@@ -70,7 +159,7 @@ export default function Home() {
 
     const dataCategory = []
 
-    data.books.forEach(e => {
+    listOfCategories.forEach(e => {
         dataCategory.push(e.category)
     });
 
@@ -78,34 +167,7 @@ export default function Home() {
         return dataCategory.indexOf(item) === index;
     })
 
-    let filterA = data.books.filter(e => filterByCategory !== "" ? e.category === filterByCategory : e);
-
-    let filteredData = filterA
-
-    let inputSearch = data.books.filter(e => {
-
-        let fullName = `${e.authors.first_name} ${e.authors.last_name}`
-        let group = e.group
-        let title = e.title
-        let text = data.search.toLowerCase()
-
-        if (group !== null) {
-            if (group.toLowerCase().indexOf(text) !== -1) {
-                return e
-            }
-        }
-
-        if (fullName.toLowerCase().indexOf(text) !== -1) {
-            return e
-        }
-
-        if (title.toLowerCase().indexOf(text) !== -1) {
-            return e
-        }
-
-    });
-
-    if (filterByCategory === "") filteredData = inputSearch;
+    filteredData = data.books
 
     return (
         <Fragment>
@@ -124,10 +186,11 @@ export default function Home() {
                         search={data.search}
                         setData={setData}
                         data={data}
+                        onKeyDown={handleKeyDown}
                     />
                     <Categories
                         data={categories}
-                        setFilter={setFilter}
+                        setFilterCategory={setFilterCategory}
                     />
                     <Center
                         gridColumnGap="30px"
@@ -138,11 +201,9 @@ export default function Home() {
 
                     >
                         {
-                            data.books.length === 0 && "There are no books, do you want to create one?"
-                        }
-                        {
-
-                            filteredData.map(e => <BookCard key={nanoid()} data={e} />)
+                            filteredData.length !== 0
+                                ? filteredData.map(e => <BookCard key={nanoid()} data={e} />)
+                                : "There are no books, do you want to create one?"
                         }
                     </Center>
 
