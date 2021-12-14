@@ -230,8 +230,6 @@ function SearchBar({ search, onChange, setData, data, onKeyDown }) {
 
     ]
 
-    console.log(state.newAuthor)
-
     return (
         <Fragment>
             <Flex
