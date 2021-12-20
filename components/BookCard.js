@@ -24,7 +24,7 @@ function BookCard({ data }) {
                     src={data.image}
                     w="full"
                     h="340px"
-                    loading="lazy"
+                    alt={data.title}
                     backgroundSize="contain"
                 />
                 <Flex direction="column" alignItems="center">

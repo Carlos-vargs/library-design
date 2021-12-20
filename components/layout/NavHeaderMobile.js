@@ -80,7 +80,6 @@ function NavHeaderMobile({ data }) {
                 onClick={handleClick}
                 cursor="pointer"
                 h="40px" w="40px"
-                aria-label="open menu"
                 title="open menu"
                 color="white"
             >
@@ -113,6 +112,7 @@ function NavHeaderMobile({ data }) {
                     <Image
                         src={logo.src}
                         w="160px"
+                        alt={'cyber book'}
                     />
 
                     <Stack pt="40px" fontSize="26px" gridGap="20px">

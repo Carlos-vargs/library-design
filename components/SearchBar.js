@@ -434,7 +434,7 @@ function SearchBar({ search, onChange, onSubmit, authors, setNewAuthor, setNewBo
                 <ModalOverlay />
                 <ModalContent my="auto !important" maxW="600px"  >
                     <ModalHeader textAlign="center">
-                        <Image src={logo.src} w="100px" mx="auto" loading="lazy" />
+                        <Image src={logo.src} w="100px" mx="auto" alt={'cyber book'} loading="lazy" />
                         <Heading as="h2" textTransform="capitalize" fontSize="20px" mt="20px" >{`create new ${dataForms[next].title}`}</Heading>
                     </ModalHeader>
                     <ModalCloseButton _focus={{ boxShadow: "none" }} />

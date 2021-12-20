@@ -10,6 +10,7 @@ function Spinner() {
         <Image
             w="140px"
             h="140px"
+            alt={'cyber book'}
             objectFit="contain"
             src={logo.src}
             position="absolute"
