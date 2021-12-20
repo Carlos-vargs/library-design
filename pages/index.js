@@ -46,6 +46,7 @@ export default function Home() {
         if (newAuthor.id !== "") {
 
             authors.push(newAuthor)
+
         }
 
         if (newBook.id !== "") {
@@ -53,9 +54,13 @@ export default function Home() {
             listOfCategories.push({ category: newBook.category })
 
             setBooks([...books, newBook])
+
+            setNewBook({ id: "", category: "" })
+
         }
 
     }, [newAuthor, newBook])
+
 
     useEffect(() => {
 
@@ -199,7 +204,7 @@ export default function Home() {
                 maxW="1520px"
                 direction="column"
                 alignItems="center"
-            >   
+            >
                 <SearchBar
                     search={search}
                     authors={authors}

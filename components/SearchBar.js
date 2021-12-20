@@ -205,7 +205,7 @@ function SearchBar({ search, onChange, onSubmit, authors, setNewAuthor, setNewBo
 
     const booksUrl = "http://localhost:8000/api/books"
     const autohrsUrl = "http://localhost:8000/api/authors"
-    
+
     const memoizedIdiomsValue = useMemo(() => getIdioms(), [])
 
     const [isOpen, setOpen] = useState(false)
@@ -327,17 +327,20 @@ function SearchBar({ search, onChange, onSubmit, authors, setNewAuthor, setNewBo
 
             const response = await axios.post(autohrsUrl, formAuthor)
 
-            setNewAuthor(response.data.data)
+            if (response.status === 201) {
 
-            setFormBook({ ...formBook, author_id: response.data.data.id })
+                setNewAuthor(response.data.data)
 
-            setFormAuthor({
-                first_name: "",
-                last_name: "",
-                nationality: "",
-            })
+                setFormBook({ ...formBook, author_id: response.data.data.id })
 
-            setNext(2)
+                setFormAuthor({
+                    first_name: "",
+                    last_name: "",
+                    nationality: "",
+                })
+                setNext(2)
+
+            }
 
         } catch (error) {
 
@@ -434,7 +437,7 @@ function SearchBar({ search, onChange, onSubmit, authors, setNewAuthor, setNewBo
                 <ModalOverlay />
                 <ModalContent my="auto !important" maxW="600px"  >
                     <ModalHeader textAlign="center">
-                        <Image src={logo.src} w="100px" mx="auto" alt={'cyber book'} loading="lazy" />
+                        <Image src={logo.src} w="100px" mx="auto" alt={'cyber book'} />
                         <Heading as="h2" textTransform="capitalize" fontSize="20px" mt="20px" >{`create new ${dataForms[next].title}`}</Heading>
                     </ModalHeader>
                     <ModalCloseButton _focus={{ boxShadow: "none" }} />
