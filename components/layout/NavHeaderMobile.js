@@ -7,7 +7,7 @@ import MenuIcon from '@icons/MenuIcon';
 import Facebook from '@icons/FacebookIcon';
 import { Image } from '@chakra-ui/image';
 import Instagram from '@icons/InstagramIcon';
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import logo from '@images/logo-white2.png';
 import { Box, Center, Stack } from '@chakra-ui/layout';
 import ContainerSocialNetworks from '@components/ContainerSocialNetworks';
@@ -71,63 +71,61 @@ function NavHeaderMobile({ data }) {
     ]
 
     return (
-        <Fragment>
-            <Center
-                display={['flex', 'flex', 'flex', 'none', 'none']}
-                alignItems="center"
-                alignSelf="center"
+        <Center
+            display={['flex', 'flex', 'flex', 'none', 'none']}
+            alignItems="center"
+            alignSelf="center"
+        >
+            <Box
+                onClick={handleClick}
+                cursor="pointer"
+                h="40px" w="40px"
+                aria-label="open menu"
+                title="open menu"
+                color="white"
             >
-                <Box
-                    onClick={handleClick}
-                    cursor="pointer"
-                    h="40px" w="40px"
-                    aria-label="open menu"
-                    title="open menu"
+                <MenuIcon />
+            </Box>
+
+            {
+                isOpen && <Stack
+                    className="animate__animated animate__fadeInRightBig"
+                    position="absolute"
+                    overflow="auto"
+                    h="100vh"
+                    zIndex="44"
+                    left={`${sizeRight}px`}
+                    transition="all 1s ease"
+                    right="0" bottom="0"
+                    top="0"
+                    bgColor="red"
                     color="white"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                    pt={['24%', '6%', '6%', '24%', '24%']}
+                    pb={['24%', '6%', '6%', '24%', '24%']}
+
                 >
-                    <MenuIcon />
-                </Box>
+                    <Box position="absolute" w="38px" h="38px" right="39px" top="35px" onClick={handleClick} title="Close">
+                        <XIcon />
+                    </Box>
 
-                {
-                    isOpen && <Stack
-                        className="animate__animated animate__fadeInRightBig"
-                        position="absolute"
-                        overflow="auto"
-                        h="100vh"
-                        zIndex="44"
-                        left={`${sizeRight}px`}
-                        transition="all 1s ease"
-                        right="0" bottom="0"
-                        top="0"
-                        bgColor="red"
-                        color="white"
-                        justifyContent="flex-start"
-                        alignItems="center"
-                        pt={['24%', '6%', '6%', '24%', '24%']}
-                        pb={['24%', '6%', '6%', '24%', '24%']}
+                    <Image
+                        src={logo.src}
+                        w="160px"
+                    />
 
-                    >
-                        <Box position="absolute" w="38px" h="38px" right="39px" top="35px" onClick={handleClick} title="Close">
-                            <XIcon />
-                        </Box>
-
-                        <Image
-                            src={logo.src}
-                            w="160px"
-                        />
-
-                        <Stack pt="40px" fontSize="26px" gridGap="20px">
-                            {
-                                data.map(e => <NavMobile onClick={handleClick} color={'white'} fontSize="16px" key={e.id} h={'50px'} data={e} />)
-                            }
-                            <ContainerSocialNetworks data={socialNetworks} mtSize={'29px !important'} gap={'14px'} revert={true} />
-                        </Stack>
-
+                    <Stack pt="40px" fontSize="26px" gridGap="20px">
+                        {
+                            data.map(e => <NavMobile onClick={handleClick} color={'white'} fontSize="16px" key={e.id} h={'50px'} data={e} />)
+                        }
+                        <ContainerSocialNetworks data={socialNetworks} mtSize={'29px !important'} gap={'14px'} revert={true} />
                     </Stack>
-                }
 
-            </Center>
-        </Fragment>
+                </Stack>
+            }
+
+        </Center>
     );
 }
 

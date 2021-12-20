@@ -1,101 +1,118 @@
-import { Fragment, useEffect, useState } from 'react'
-import Layout from '@components/layout/Layout'
 import axios from 'axios';
-import BookCard from '@components/BookCard';
-import { Center, Flex } from '@chakra-ui/layout';
-import SearchBar from '@components/SearchBar';
-import Categories from '@components/Categories';
-import { Spinner } from '@chakra-ui/spinner';
 import { nanoid } from 'nanoid';
+import Spinner from '@components/Spinner';
+import { useEffect, useState } from 'react'
+import BookCard from '@components/BookCard';
+import SearchBar from '@components/SearchBar';
+import Layout from '@components/layout/Layout'
+import Categories from '@components/Categories';
+import { Center, Flex } from '@chakra-ui/layout';
 
 export default function Home() {
 
-    const BooksUrl = "http://localhost:8000/api/books"
+    const booksUrl = "http://localhost:8000/api/books"
+    const categoryUrl = "http://localhost:8000/api/books/categories"
     const searchUrl = "http://localhost:8000/api/search"
-    const BooksCategoryUrl = "http://localhost:8000/api/books/category"
-    const categoryUrl = "http://localhost:8000/api/category"
+    const autohrsUrl = "http://localhost:8000/api/authors"
 
-    let filteredData;
 
-    const [data, setData] = useState({
+    const [state, setState] = useState({
         loading: true,
         error: null,
-        books: [],
-        categories:[],
-        search: "",
-        newBook: {},
     });
 
+    const [search, setSearch] = useState("")
+    const [books, setBooks] = useState([])
+    const [authors, setAuthors] = useState([])
+    const [newAuthor, setNewAuthor] = useState({ id: "" })
+    const [newBook, setNewBook] = useState({ id: "", category: "" })
+
     const [filterCategory, setFilterCategory] = useState(null)
-    const [lookingForData, setLookingForData] = useState(false)
-    const [listOfCategories, setCategory] = useState([])
+    const [listOfCategories, setCategories] = useState([])
+
 
     useEffect(() => {
 
         fetchBooks()
 
-         fetchCategories()
+        fetchAuthors()
 
-        if (filterCategory) {
-            filterByCategory()
+        fetchCategories()
+
+    }, [])
+
+    useEffect(() => {
+
+        if (newAuthor.id !== "") {
+
+            authors.push(newAuthor)
         }
 
-        if (lookingForData) {
-            search()
+        if (newBook.id !== "") {
+
+            listOfCategories.push({ category: newBook.category })
+
+            setBooks([...books, newBook])
         }
 
-    }, [filterCategory, lookingForData, data.newBook])
+    }, [newAuthor, newBook])
+
+    useEffect(() => {
+
+        if (filterCategory !== null) {
+
+            if (filterCategory === 'all') {
+                fetchBooks()
+            } else {
+                filterByCategory()
+            }
+
+        }
+
+    }, [filterCategory]);
 
 
-    const handleChange = e => {
-        const { name, value } = e.target
-        setData({ ...data, [name]: value })
+    const handleChangeInputSearch = e => {
+
+        const { value } = e.target
+
+        setSearch(value)
+
     }
 
-    function handleKeyDown(e) {
-        if (e.keyCode === 13) {
-            setLookingForData(true)
+    const fetchDataSearch = async e => {
+
+        e.preventDefault()
+
+        if (search !== "") {
+            try {
+
+                const response = await axios.get(searchUrl, { params: { filter: search } })
+
+                setState({ ...state, loading: false })
+                setBooks(response.data.data)
+
+            } catch (error) {
+                setState({
+                    loading: false,
+                    error: error,
+                })
+            }
         }
-    }
+
+    };
 
     async function filterByCategory() {
-        setData({ ...data })
 
         try {
 
-            const response = await axios.get(BooksCategoryUrl, { params: { filter: filterCategory } })
+            const response = await axios.get(searchUrl, { params: { filter: filterCategory } })
 
-            setData({
-                ...data, loading: false,
-                books: response.data.data,
-            })
+            setState({ ...state, loading: false })
+            setBooks(response.data.data)
 
         } catch (error) {
-            setData({
-                ...data,
-                loading: false,
-                error: error,
-            })
-        }
-
-    }
-
-    async function search() {
-
-        setData({ ...data })
-
-        try {
-
-            const response = await axios.get(searchUrl, { params: { filter: data.search } })
-
-            setData({
-                ...data, loading: false,
-                books: response.data.data,
-            })
-
-        } catch (error) {
-            setData({
-                ...data,
+            setState({
                 loading: false,
                 error: error,
             })
@@ -104,19 +121,16 @@ export default function Home() {
     }
 
     async function fetchBooks() {
-        setData({ ...data })
 
         try {
-            const response = await axios.get(BooksUrl)
+            const response = await axios.get(booksUrl)
 
-            setData({
-                ...data, loading: false,
-                books: response.data.data,
-            })
+            setState({ ...state, loading: false })
+
+            setBooks(response.data.data)
 
         } catch (error) {
-            setData({
-                ...data,
+            setState({
                 loading: false,
                 error: error,
             })
@@ -125,15 +139,15 @@ export default function Home() {
     }
 
     async function fetchCategories() {
-        
+
         try {
             const response = await axios.get(categoryUrl)
 
-            setCategory(response.data.data)
+            setCategories(response.data.data)
 
         } catch (error) {
-            setData({
-                ...data,
+            setState({
+                ...state,
                 loading: false,
                 error: error,
             })
@@ -141,20 +155,28 @@ export default function Home() {
 
     }
 
-    if (data.error) console.error(`Error: ${data.error.message}`);
+    async function fetchAuthors() {
 
-    if (data.loading) {
-        return (
-            <Flex h="100vh" w="full" justifyContent="center" alignItems="center">
-                <Spinner
-                    thickness="4px"
-                    speed="0.65s"
-                    emptyColor="gray.200"
-                    color="#4886B5"
-                    size="xl"
-                />
-            </Flex>
-        )
+        try {
+
+            const response = await axios.get(autohrsUrl)
+
+            setAuthors(response.data.data)
+
+        } catch (error) {
+            setState({
+                ...state,
+                error: error,
+            })
+        }
+    }
+
+    if (state.error) {
+        console.error(`Error: ${state.error.message}`)
+    };
+
+    if (state.loading) {
+        return <Spinner />
     };
 
     const dataCategory = []
@@ -164,52 +186,50 @@ export default function Home() {
     });
 
     let categories = dataCategory.filter((item, index) => {
-        return dataCategory.indexOf(item) === index;
+        return dataCategory.indexOf(item) === index
     })
 
-    filteredData = data.books
-
     return (
-        <Fragment>
-            <Layout>
-                <Flex
-                    w="full"
-                    mx="auto"
-                    pb="200px"
-                    pt="140px"
-                    maxW="1520px"
-                    direction="column"
-                    alignItems="center"
+        <Layout>
+            <Flex
+                w="full"
+                mx="auto"
+                pb="200px"
+                pt="140px"
+                maxW="1520px"
+                direction="column"
+                alignItems="center"
+            >   
+                <SearchBar
+                    search={search}
+                    authors={authors}
+                    setNewBook={setNewBook}
+                    onSubmit={fetchDataSearch}
+                    setNewAuthor={setNewAuthor}
+                    onChange={handleChangeInputSearch}
+                />
+                <Categories
+                    data={categories}
+                    filterCategory={filterCategory}
+                    setFilterCategory={setFilterCategory}
+                />
+                <Center
+                    pt="60px"
+                    flexWrap="wrap"
+                    gridRowGap="60px"
+                    gridColumnGap="30px"
+                    px={['20px', '30px', '40px', '60px', '60px']}
+
                 >
-                    <SearchBar
-                        onChange={handleChange}
-                        search={data.search}
-                        setData={setData}
-                        data={data}
-                        onKeyDown={handleKeyDown}
-                    />
-                    <Categories
-                        data={categories}
-                        setFilterCategory={setFilterCategory}
-                    />
-                    <Center
-                        gridColumnGap="30px"
-                        gridRowGap="60px"
-                        flexWrap="wrap"
-                        pt="60px"
-                        px={['30px', '30px', '40px', '60px', '60px']}
-
-                    >
-                        {
-                            filteredData.length !== 0
-                                ? filteredData.map(e => <BookCard key={nanoid()} data={e} />)
-                                : "There are no books, do you want to create one?"
-                        }
-                    </Center>
+                    {
+                        books.length !== 0
+                            ? books.map(e => <BookCard key={nanoid()} data={e} />)
+                            : <Flex textAlign="center" >There are no books, do you want to create one?</Flex>
+                    }
+                </Center>
 
 
-                </Flex>
-            </Layout>
-        </Fragment>
+            </Flex>
+        </Layout>
     );
 }

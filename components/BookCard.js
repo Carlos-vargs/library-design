@@ -1,11 +1,9 @@
 import { Image } from '@chakra-ui/image';
 import { Flex, Heading, Text } from '@chakra-ui/layout';
-import { Fragment } from 'react';
 
 function BookCard({ data }) {
 
     return (
-        <Fragment>
             <Flex
                 h="auto"
                 pb="36px"
@@ -26,6 +24,7 @@ function BookCard({ data }) {
                     src={data.image}
                     w="full"
                     h="340px"
+                    loading="lazy"
                     backgroundSize="contain"
                 />
                 <Flex direction="column" alignItems="center">
@@ -42,8 +41,7 @@ function BookCard({ data }) {
                         {data.title}
                     </Heading>
                 </Flex>
-            </Flex>
-        </Fragment>
+            </Flex> 
     );
 }
 
