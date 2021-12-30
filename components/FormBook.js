@@ -4,6 +4,12 @@ import { Input } from '@chakra-ui/input';
 
 function FormBook({ onChange, values, setNext }) {
 
+    function handleClick() {
+        if (values.title, values.category, values.cover_url !== "") {
+            setNext(2)
+        }
+    }
+
     return (
         <Flex
             px="20px"
@@ -56,7 +62,8 @@ function FormBook({ onChange, values, setNext }) {
                     maxW="100px"
                     colorScheme='blue'
                     textTransform="capitalize"
-                    onClick={() => setNext(2)}
+                    type="submit"
+                    onClick={handleClick}
                 >
                     next
                 </Button>
