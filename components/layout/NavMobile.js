@@ -1,12 +1,6 @@
 import { Link } from '@chakra-ui/layout';
 
-function NavMobile({ data, h, color, onClick, fontSize }) {
-
-    let colorDefault = "#fff"
-    let heightDefault = "full"
-
-    if (color) colorDefault = color
-    if (h) heightDefault = h
+function NavMobile({ data, height, color, onClick, fontSize }) {
 
     return (
         <Link
@@ -15,7 +9,7 @@ function NavMobile({ data, h, color, onClick, fontSize }) {
             display="flex"
             position="relative"
             alignItems="center"
-            h={heightDefault}
+            h={height}
             alignSelf="center"
             textTransform="uppercase"
             fontWeight="700"
@@ -24,7 +18,7 @@ function NavMobile({ data, h, color, onClick, fontSize }) {
                 content: '""',
                 position: "absolute",
                 top: "100%",
-                backgroundColor: colorDefault,
+                backgroundColor: color,
                 width: "100%",
                 height: "2px",
                 transform: "scaleX(0)",
@@ -34,14 +28,14 @@ function NavMobile({ data, h, color, onClick, fontSize }) {
                 _before: {
                     transform: "scaleX(1)"
                 },
-                color: colorDefault,
+                color: color,
                 textDecoration: "none",
             }}
             _focus={{
                 _before: {
                     transform: "scaleX(1)"
                 },
-                color: colorDefault,
+                color: color,
                 textDecoration: "none",
                 boxShadow: "none"
 

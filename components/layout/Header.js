@@ -32,7 +32,7 @@ function Header() {
 
     return (
         <Flex
-            bgColor="#0E0E0E"
+            bgColor="blackColorHeader"
             justifyContent="center"
             w="full"
             h="100px"

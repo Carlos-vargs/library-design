@@ -420,14 +420,14 @@ function SearchBar({ search, onChange, onSubmit, authors, setNewAuthor, setNewBo
                 w="40px"
                 h="40px"
                 minW="40px"
-                color="#ffff"
+                color="white"
                 cursor="pointer"
-                bgColor="#4886B5"
+                bgColor="blueColorButton"
                 borderRadius="full"
                 title="create new book"
                 transition="all .2s ease-in"
                 _hover={{
-                    backgroundColor: "#3D749D"
+                    backgroundColor: "blueColorButtonHover"
                 }}
                 onClick={handleClick}
             >

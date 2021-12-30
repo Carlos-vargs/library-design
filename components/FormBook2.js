@@ -69,14 +69,14 @@ function FormBook2({ onChange, values, setPrevious, authors = [], idioms = [] })
                     w="36px"
                     h="36px"
                     minW="36px"
-                    color="#ffff"
+                    color="white"
                     cursor="pointer"
-                    bgColor="#4886B5"
+                    bgColor="blueColorButton"
                     borderRadius="full"
                     title="create new author"
                     transition="all .2s ease-in"
                     _hover={{
-                        backgroundColor: "#3D749D"
+                        backgroundColor: "blueColorButtonHover"
                     }}
                     onClick={() => setPrevious(0)}
 

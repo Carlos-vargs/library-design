@@ -117,7 +117,7 @@ function NavHeaderMobile({ data }) {
 
                     <Stack pt="40px" fontSize="26px" gridGap="20px">
                         {
-                            data.map(e => <NavMobile onClick={handleClick} color={'white'} fontSize="16px" key={e.id} h={'50px'} data={e} />)
+                            data.map(e => <NavMobile onClick={handleClick} color={'white'} fontSize="16px" key={e.id} height={'50px'} data={e} />)
                         }
                         <ContainerSocialNetworks data={socialNetworks} mtSize={'29px !important'} gap={'14px'} revert={true} />
                     </Stack>

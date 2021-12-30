@@ -1,11 +1,6 @@
-import { Flex, Link, Box } from '@chakra-ui/layout';
+import { Flex, Link } from '@chakra-ui/layout';
 
-export default function ContainerSocialNetworks({ data, mtSize, gap, revert }) {
-
-    let colorDefaultHover = "white"
-    let colorDefault = "white"
-    let shadowLight = `0 0 0 2px white inset`
-    let NoShadowLight = `0 0 0 0px white inset`
+export default function ContainerSocialNetworks({ data, mtSize, gap }) {
 
     return (
         <Flex mt={mtSize} justifyContent="center" gridGap={gap}  >
@@ -18,20 +13,19 @@ export default function ContainerSocialNetworks({ data, mtSize, gap, revert }) {
                         transition="all .3s ease-out"
                         w="40px"
                         h="40px"
-                        shadow={NoShadowLight}
                         borderRadius="full"
-                        color={colorDefault}
+                        color="white"
                         href={e.url}
                         display="flex"
                         isExternal
                         title={e.socialNetwork}
                         _hover={{
-                            color: colorDefaultHover,
-                            boxShadow: shadowLight,
+                            color: "white",
+                            boxShadow: '0 0 0 2px white inset',
                         }}
                         _focus={{
-                            color: colorDefaultHover,
-                            boxShadow: shadowLight,
+                            color: "white",
+                            boxShadow: '0 0 0 2px white inset',
                         }}
                     >
                         <Flex
