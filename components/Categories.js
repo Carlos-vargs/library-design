@@ -24,15 +24,6 @@ function Categories({ data = [], setFilterCategory, filterCategory }) {
 
     }
 
-    function handleClick() {
-
-        if (filterCategory !== null) {
-            
-            return setFilterCategory('all')
-        }
-
-    }
-
     return (
         <Flex
             pt="50px"
@@ -58,7 +49,7 @@ function Categories({ data = [], setFilterCategory, filterCategory }) {
                     w={['120px', '140px', '160px', '160px', '160px']}
                     userSelect="none"
                     color="hsl(0deg 0% 34%)"
-                    onClick={handleClick}
+                    onClick={() => filterCategory !== null && setFilterCategory('all')}
                 >
                     all
                 </Flex>
