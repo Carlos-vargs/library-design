@@ -6,10 +6,10 @@ import { Image } from '@chakra-ui/image';
 import FormBook from '@components/FormBook';
 import FormBook2 from '@components/FormBook2';
 import FormAuthor from '@components/FormAuthor';
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Box, Center, Flex, Heading } from '@chakra-ui/layout';
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/modal';
-import idioms from '../public/idioms.json'
+import idioms from 'public/idioms.json'
 
 function getIdioms() {
     return idioms
@@ -17,8 +17,8 @@ function getIdioms() {
 
 function SearchBar({ search, onChange, onSubmit, authors, setNewAuthor, setNewBook }) {
 
-    const booksUrl = "http://localhost:8000/api/books"
-    const autohrsUrl = "http://localhost:8000/api/authors"
+    const booksUrl = `${process.env.API_HOST}/books`
+    const autohrsUrl = `${process.env.API_HOST}/authors`
 
     const memoizedIdiomsValue = useMemo(() => getIdioms(), [])
 

@@ -28,7 +28,7 @@ function BookCard({ data }) {
                     backgroundSize="contain"
                 />
                 <Flex direction="column" alignItems="center">
-                    <Text as="span" fontSize="12px" textTransform="uppercase" fontWeight="700" mb="8px" >{`${data.authors.first_name} ${data.authors.last_name}`}</Text>
+                    <Text as="span" fontSize="12px" textTransform="uppercase" fontWeight="700" mb="8px" >{data.authors.name}</Text>
                     <Heading
                         className="line-clamp"
                         fontWeight="700"

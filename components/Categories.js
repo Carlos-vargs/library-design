@@ -7,10 +7,11 @@ function randomColor() {
 
     let color = `hsla(${(Math.random() * 360).toFixed(0)}, 100%, 85%, 1)`;
 
-    return color
+    return color;
 }
 
-function Categories({ data = [], setFilterCategory, filterCategory }) {
+
+function Categories({ data = [], setFilterCategory }) {
 
     let colorsLength = data.length + 1
 
@@ -49,7 +50,7 @@ function Categories({ data = [], setFilterCategory, filterCategory }) {
                     w={['120px', '140px', '160px', '160px', '160px']}
                     userSelect="none"
                     color="hsl(0deg 0% 34%)"
-                    onClick={() => filterCategory !== null && setFilterCategory('all')}
+                    onClick={() => setFilterCategory('all')}
                 >
                     all
                 </Flex>
