@@ -9,11 +9,7 @@ import FormAuthor from '@components/FormAuthor';
 import { useState, useMemo } from 'react';
 import { Box, Center, Flex, Heading } from '@chakra-ui/layout';
 import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/modal';
-import idioms from 'public/idioms.json'
-
-function getIdioms() {
-    return idioms
-}
+import { getIdioms } from './getIdioms';
 
 function SearchBar({ search, onChange, onSubmit, authors, setNewAuthor, setNewBook }) {
 
@@ -43,10 +39,7 @@ function SearchBar({ search, onChange, onSubmit, authors, setNewAuthor, setNewBo
         nationality: "",
     })
 
-    const [state, setState] = useState({
-        loading: false,
-        error: null,
-    });
+    const [loading, setLoading] = useState(false);
 
     const handleChangeFormBook = e => {
 
@@ -98,15 +91,17 @@ function SearchBar({ search, onChange, onSubmit, authors, setNewAuthor, setNewBo
 
         e.preventDefault()
 
-        setState({ ...state, loading: true, })
+        setLoading(true)
 
         try {
 
-            const response = await axios.post(booksUrl, formBook)
+            const { status, data: { data: newBook } } = await axios.post(booksUrl, formBook)
 
-            if (response.status === 201) {
+            if (status === 201) {
 
-                setNewBook(response.data.data)
+                setLoading(false)
+
+                setNewBook(newBook)
 
                 setOpen(false)
 
@@ -126,7 +121,8 @@ function SearchBar({ search, onChange, onSubmit, authors, setNewAuthor, setNewBo
 
         } catch (error) {
 
-            setState({ ...state, error: error, })
+            setLoading(false)
+            console.error(error);
 
         }
     }
@@ -135,17 +131,19 @@ function SearchBar({ search, onChange, onSubmit, authors, setNewAuthor, setNewBo
 
         e.preventDefault()
 
-        setState({ ...state, loading: true, })
+        setLoading(true)
 
         try {
 
-            const response = await axios.post(autohrsUrl, formAuthor)
+            const { status, data: { data: { id }, data: newAuthor } } = await axios.post(autohrsUrl, formAuthor)
 
-            if (response.status === 201) {
+            if (status === 201) {
 
-                setNewAuthor(response.data.data)
+                setLoading(false)
 
-                setFormBook({ ...formBook, author_id: response.data.data.id })
+                setNewAuthor(newAuthor)
+
+                setFormBook({ ...formBook, author_id: id })
 
                 setFormAuthor({
                     first_name: "",
@@ -158,7 +156,8 @@ function SearchBar({ search, onChange, onSubmit, authors, setNewAuthor, setNewBo
 
         } catch (error) {
 
-            setState({ ...state, error: error })
+            setLoading(false)
+            console.error(error);
 
         }
     }
@@ -170,6 +169,7 @@ function SearchBar({ search, onChange, onSubmit, authors, setNewAuthor, setNewBo
                 <FormAuthor
                     onChange={handleChangeFormAuthor}
                     setFormAuthor={setFormAuthor}
+                    loading={loading}
                     values={formAuthor}
                     setNext={setNext}
                     key="formAuthor"
@@ -193,6 +193,7 @@ function SearchBar({ search, onChange, onSubmit, authors, setNewAuthor, setNewBo
             form: [
                 < FormBook2
                     onChange={handleChangeFormBook}
+                    loading={loading}
                     values={formBook}
                     idioms={memoizedIdiomsValue}
                     setPrevious={setNext}

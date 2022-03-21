@@ -7,7 +7,7 @@ import { nanoid } from 'nanoid';
 import PlusIcon from '@icons/PlusIcon';
 
 
-function FormBook2({ onChange, values, setPrevious, authors = [], idioms = [] }) {
+function FormBook2({ onChange, values, setPrevious, authors = [], idioms = [], loading }) {
 
     return (
         <Flex
@@ -61,7 +61,7 @@ function FormBook2({ onChange, values, setPrevious, authors = [], idioms = [] })
                     textTransform="capitalize"
                 >
                     {
-                        authors.map(e => <option key={nanoid()} value={e.id}  >{`${e.first_name} ${e.last_name}`}</option>)
+                        authors.map(e => <option key={nanoid()} value={e.id}>{e.name}</option>)
                     }
                 </Select>
                 <Box
@@ -104,6 +104,9 @@ function FormBook2({ onChange, values, setPrevious, authors = [], idioms = [] })
                     previous
                 </Button>
                 <Button
+                    isLoading={loading}
+                    loadingText="Submitting"
+                    spinnerPlacement='end'
                     maxW="100px"
                     colorScheme='blue'
                     textTransform="capitalize"

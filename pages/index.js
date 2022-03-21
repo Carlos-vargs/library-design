@@ -6,22 +6,23 @@ import SearchBar from '@components/SearchBar';
 import Layout from '@components/layout/Layout'
 import Categories from '@components/Categories';
 import { Center, Flex } from '@chakra-ui/layout';
+import Spinner from '@components/Spinner';
 
 
 export default function Home() {
-
     const booksUrl = `${process.env.API_HOST}/books`
     const categoryUrl = `${process.env.API_HOST}/books/categories`
     const searchUrl = `${process.env.API_HOST}/search`
     const autohrsUrl = `${process.env.API_HOST}/authors`
 
     const [search, setSearch] = useState("")
+    const [loading, setLoading] = useState(true)
     const [books, setBooks] = useState([])
     const [authors, setAuthors] = useState([])
     const [newAuthor, setNewAuthor] = useState({ id: "" })
     const [newBook, setNewBook] = useState({ id: "", category: "" })
 
-    const [filterCategory, setFilterCategory] = useState(null)
+    const [filterByCategory, setFilterByCategory] = useState(null)
     const [categories, setCategories] = useState([])
 
 
@@ -39,13 +40,13 @@ export default function Home() {
 
         if (newAuthor.id !== "") {
 
-            authors.push(newAuthor)
+            setAuthors([...authors, newAuthor])
 
         }
 
         if (newBook.id !== "") {
 
-            listOfCategories.push({ category: newBook.category })
+            setCategories([...categories, newBook.category])
 
             setBooks([...books, newBook])
 
@@ -58,18 +59,11 @@ export default function Home() {
 
     useEffect(() => {
 
-        if (filterCategory !== null) {
-
-            setSearch("")
-
-            if (filterCategory === 'all') {
-                fetchBooks()
-            } else {
-                fetchDataSearch()
-            }
+        if (filterByCategory !== null) {
+            filterByCategory === 'all' ? fetchBooks() : fetchDataSearch();
         }
 
-    }, [filterCategory]);
+    }, [filterByCategory]);
 
 
     const handleChangeInputSearch = e => {
@@ -86,15 +80,16 @@ export default function Home() {
 
         try {
 
-            const { data: { data: books } } = await axios.get(searchUrl, { params: { filter: search !== "" ? search : filterCategory } })
+            const { data: { data: books } } = await axios.get(searchUrl, { params: { filter: search !== "" ? search : filterByCategory } })
 
             setBooks(books)
+
+            setSearch("")
 
         } catch (error) {
             console.error(error)
         }
-
-
+    
     }
 
     async function fetchBooks() {
@@ -103,6 +98,8 @@ export default function Home() {
             const { data: { data: books } } = await axios.get(booksUrl)
 
             setBooks(books)
+
+            setLoading(false)
 
         } catch (error) {
             console.error(error);
@@ -116,6 +113,9 @@ export default function Home() {
             const { data: { data: categories } } = await axios.get(categoryUrl)
 
             setCategories(categories)
+
+            setLoading(false)
+
 
         } catch (error) {
             console.error(error);
@@ -136,9 +136,9 @@ export default function Home() {
         }
     }
 
-
-    return (
-        <Layout>
+    return loading
+        ? <Spinner />
+        : <Layout>
             <Flex
                 w="full"
                 mx="auto"
@@ -158,8 +158,8 @@ export default function Home() {
                 />
                 <Categories
                     data={categories}
-                    filterCategory={filterCategory}
-                    setFilterCategory={setFilterCategory}
+                    filterByCategory={filterByCategory}
+                    setFilterByCategory={setFilterByCategory}
                 />
                 <Center
                     pt="60px"
@@ -175,9 +175,6 @@ export default function Home() {
                             : <Flex textAlign="center" >There are no books, do you want to create one?</Flex>
                     }
                 </Center>
-
-
             </Flex>
-        </Layout>
-    );
+        </Layout>;
 }

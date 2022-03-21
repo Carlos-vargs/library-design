@@ -6,7 +6,7 @@ import { nanoid } from 'nanoid';
 import countries from 'public/countries.json'
 
 
-function FormAuthor({ onChange, values, setNext, setFormAuthor }) {
+function FormAuthor({ onChange, values, setNext, setFormAuthor, loading }) {
 
     return (
         <Flex
@@ -71,6 +71,9 @@ function FormAuthor({ onChange, values, setNext, setFormAuthor }) {
                     cancel
                 </Button>
                 <Button
+                    isLoading={loading}
+                    loadingText="Submitting"
+                    spinnerPlacement='end'
                     maxW="100px"
                     w="full"
                     colorScheme='blue'
