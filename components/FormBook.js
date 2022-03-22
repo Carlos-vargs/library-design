@@ -5,9 +5,10 @@ import { Input } from '@chakra-ui/input';
 function FormBook({ onChange, values, setNext }) {
 
     function handleClick() {
-        if (values.title, values.category, values.cover_url !== "") {
-            setNext(2)
-        }
+
+        const InputValues = [values.title, values.category, values.cover_url]
+
+        !(InputValues.includes("")) && setNext(2)
     }
 
     return (

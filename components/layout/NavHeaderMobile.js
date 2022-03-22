@@ -17,26 +17,19 @@ function NavHeaderMobile({ data }) {
     const [isOpen, setisOpen] = useState(false)
     const [sizeRight, setSizeRight] = useState(0)
 
-    function setOpen() {
-        setisOpen(true)
-    }
-
-    function setClose() {
-        setisOpen(false)
-    }
 
     function handleClick() {
         if (isOpen) {
             setSizeRight(1000)
 
             setTimeout(() => {
-                setClose()
+                setisOpen(!isOpen)
             }, 400);
 
         } else {
             setSizeRight(0)
 
-            setOpen()
+            setisOpen(!isOpen)
 
         }
     }
